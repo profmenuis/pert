@@ -22,9 +22,10 @@ svg.append("defs").append("marker")
 
 // Fonction pour ajouter un nouveau cercle
 function addCircle() {
+     var topNumber = prompt("Entrez le numero étape :", Math.floor(Math.random() * 10));
     var number1 = prompt("Entrez temps au plus tot (en bas gauche) :", Math.floor(Math.random() * 10));
     var number2 = prompt("Entrez temps au plus tard (en bas droit) :", Math.floor(Math.random() * 10));
-    var topNumber = prompt("Entrez le numero étape :", Math.floor(Math.random() * 10));
+   
 
     var newCircle = {
         cx: Math.random() * 700 + 50, // Position aléatoire dans le SVG
@@ -32,9 +33,10 @@ function addCircle() {
         r: 30,
         color: "blue",
         id: circleData.length + 1,
+       topNumber: +topNumber
         number1: +number1,
         number2: +number2,
-        topNumber: +topNumber
+        
     };
     circleData.push(newCircle);
     
