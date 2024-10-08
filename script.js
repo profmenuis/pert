@@ -160,7 +160,7 @@ function updateLines() {
                     openStyleDialog(selectedLine); // Ouvrir le dialogue pour changer le style
                 });
 
-            // Ajouter du texte pour la durée de la liaison
+            // Ajouter du texte pour la  tâche et la durée de la liaison
             d3.select(this)
                 .append("text")
                 .attr("x", (d.circle1.cx + d.circle2.cx) / 2) // Position au milieu
@@ -171,7 +171,7 @@ function updateLines() {
                 .text(d.text)
                 .on("click", function(event, d) {
                     event.stopPropagation(); // Éviter de sélectionner la ligne en même temps
-                    var newText = prompt("Modifier la durée :", d.text);
+                    var newText = prompt("Modifier la tâche et la durée :", d.text);
                     if (newText !== null) {
                         d.text = newText;
                         d3.select(this).text(newText);
@@ -245,7 +245,7 @@ function selectCircle(circle) {
 
 // Fonction pour créer une liaison entre les cercles
 function createLink(circle1, circle2) {
-    var lineText = prompt("Entrez la durée :");
+    var lineText = prompt("Entrez la  tâche et sa durée (ex:B4 :");
 
     var newLine = { 
         circle1: circle1, 
