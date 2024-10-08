@@ -1,0 +1,87 @@
+/* CSS de base pour le corps de la page */
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    font-family: Arial, sans-serif; /* Police pour l'ensemble de la page */
+    background-color: #f4f4f4; /* Couleur de fond */
+}
+
+/* Styles pour le conteneur SVG */
+svg {
+    display: block; /* Évite les marges par défaut */
+    background-color: #fff; /* Couleur de fond du SVG */
+    border: 1px solid #ccc; /* Bordure autour de la zone de dessin */
+}
+
+/* Styles pour les cercles */
+.circle circle {
+    stroke: black; /* Couleur du contour des cercles */
+    stroke-width: 2; /* Épaisseur du contour */
+}
+
+/* Styles pour les textes dans les cercles */
+.circle text {
+    font-size: 12px; /* Taille du texte */
+    fill: white; /* Couleur du texte */
+    pointer-events: none; /* Empêche les événements de clic sur le texte */
+}
+
+/* Style de la boîte de dialogue pour la sélection de style de ligne */
+#styleDialog {
+    display: none; /* Masqué par défaut */
+    position: fixed; /* Fixe la position de la boîte de dialogue */
+    top: 50%; /* Centrer verticalement */
+    left: 50%; /* Centrer horizontalement */
+    transform: translate(-50%, -50%); /* Ajustement pour centrer */
+    background-color: white; /* Couleur de fond */
+    border: 1px solid #ccc; /* Bordure */
+    padding: 20px; /* Espacement interne */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Ombre */
+    z-index: 1000; /* Au-dessus des autres éléments */
+}
+
+/* Styles pour les boutons de la boîte de dialogue */
+#styleDialog button {
+    margin-top: 10px; /* Espacement au-dessus des boutons */
+    padding: 5px 10px; /* Espacement interne des boutons */
+    background-color: #007bff; /* Couleur de fond */
+    color: white; /* Couleur du texte */
+    border: none; /* Pas de bordure */
+    border-radius: 4px; /* Coins arrondis */
+    cursor: pointer; /* Curseur de main au survol */
+}
+
+#styleDialog button:hover {
+    background-color: #0056b3; /* Couleur au survol */
+}
+
+/* Styles pour le texte de la flèche */
+.link text {
+    fill: black; /* Couleur du texte */
+    pointer-events: auto; /* Permet les événements de clic */
+}
+
+/* Styles pour les icônes de suppression */
+.delete-icon {
+    fill: red; /* Couleur rouge pour l'icône de suppression */
+    cursor: pointer; /* Curseur de main au survol */
+}
+
+/* Styles pour les flèches */
+.link line {
+    stroke-width: 2; /* Épaisseur de la ligne */
+}
+
+.link.dashed line {
+    stroke-dasharray: 5, 5; /* Style de ligne pointillée */
+}
+
+.link.red line {
+    stroke: red; /* Couleur rouge pour la ligne */
+}
+
+.link.normal line {
+    stroke: black; /* Couleur noire pour la ligne normale */
+}

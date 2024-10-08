@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diagramme dynamique avec cercles et flèches modifiables</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <button id="addCircle">Ajouter une étape</button>
+    <button id="setName">Entrer votre nom</button>
+    <button id="setProject">Entrer le projet</button>
+    <button id="setDate">Entrer la date</button>
+    <p>Cliquez sur deux cercles pour les relier avec une flèche</p>
+    <svg width="100%" height="100%"></svg>
+
+    <!-- Boîte de dialogue pour le style de la flèche -->
+    <div id="styleDialog">
+        <label for="lineStyle">Sélectionnez le style de la ligne :</label>
+        <select id="lineStyle">
+            <option value="normal">Normal</option>
+            <option value="red">Chemin critique</option>
+            <option value="dashed">Tache fictive</option>
+        </select>
+        <button id="applyStyle">Appliquer</button>
+        <button id="cancelStyle">Annuler</button>
+    </div>
+
+    <!-- Lien vers le fichier JavaScript -->
+    <script src="script.js"></script>
+</body>
+</html>
