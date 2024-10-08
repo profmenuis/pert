@@ -1,3 +1,4 @@
+
 // script.js
 var svg = d3.select("svg");
 var circleData = [];
@@ -22,10 +23,9 @@ svg.append("defs").append("marker")
 
 // Fonction pour ajouter un nouveau cercle
 function addCircle() {
-     var topNumber = prompt("Entrez le numero étape :", Math.floor(Math.random() * 10));
     var number1 = prompt("Entrez temps au plus tot (en bas gauche) :", Math.floor(Math.random() * 10));
     var number2 = prompt("Entrez temps au plus tard (en bas droit) :", Math.floor(Math.random() * 10));
-   
+    var topNumber = prompt("Entrez le numero étape :", Math.floor(Math.random() * 10));
 
     var newCircle = {
         cx: Math.random() * 700 + 50, // Position aléatoire dans le SVG
@@ -33,10 +33,9 @@ function addCircle() {
         r: 30,
         color: "blue",
         id: circleData.length + 1,
-       topNumber: +topNumber
         number1: +number1,
         number2: +number2,
-        
+        topNumber: +topNumber
     };
     circleData.push(newCircle);
     
@@ -162,7 +161,7 @@ function updateLines() {
                     openStyleDialog(selectedLine); // Ouvrir le dialogue pour changer le style
                 });
 
-            // Ajouter du texte pour la  tâche et la durée de la liaison
+            // Ajouter du texte pour la durée de la liaison
             d3.select(this)
                 .append("text")
                 .attr("x", (d.circle1.cx + d.circle2.cx) / 2) // Position au milieu
@@ -173,7 +172,7 @@ function updateLines() {
                 .text(d.text)
                 .on("click", function(event, d) {
                     event.stopPropagation(); // Éviter de sélectionner la ligne en même temps
-                    var newText = prompt("Modifier la tâche et la durée :", d.text);
+                    var newText = prompt("Modifier la durée :", d.text);
                     if (newText !== null) {
                         d.text = newText;
                         d3.select(this).text(newText);
@@ -247,7 +246,7 @@ function selectCircle(circle) {
 
 // Fonction pour créer une liaison entre les cercles
 function createLink(circle1, circle2) {
-    var lineText = prompt("Entrez la  tâche et sa durée (ex:B4 :");
+    var lineText = prompt("Entrez la durée :");
 
     var newLine = { 
         circle1: circle1, 
