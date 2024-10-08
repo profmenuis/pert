@@ -67,7 +67,7 @@ function updateDisplay() {
         .style("stroke", "black")
         .style("stroke-width", 2);
 
-    // Ajouter le nombre en haut (rendre éditable)
+    // Ajouter le numéro d'étapes (rendre éditable)
     gEnter.append("text")
         .attr("y", -15)
         .attr("text-anchor", "middle")
@@ -76,7 +76,7 @@ function updateDisplay() {
         .text(function(d) { return d.topNumber; })
         .on("click", function(event, d) {
             event.stopPropagation();
-            var newText = prompt("Modifier le nombre en haut :", d.topNumber);
+            var newText = prompt("Modifier le numéro d'étapes :", d.topNumber);
             if (newText !== null) {
                 d.topNumber = +newText;
                 d3.select(this).text(newText);
@@ -93,7 +93,7 @@ function updateDisplay() {
         .text(function(d) { return d.number1; })
         .on("click", function(event, d) {
             event.stopPropagation();
-            var newText = prompt("Modifier le premier nombre :", d.number1);
+            var newText = prompt("Modifier le temps au plus tôt :", d.number1);
             if (newText !== null) {
                 d.number1 = +newText;
                 d3.select(this).text(newText);
@@ -109,7 +109,7 @@ function updateDisplay() {
         .text(function(d) { return d.number2; })
         .on("click", function(event, d) {
             event.stopPropagation();
-            var newText = prompt("Modifier le deuxième nombre :", d.number2);
+            var newText = prompt("Modifier le temps au plus tard:", d.number2);
             if (newText !== null) {
                 d.number2 = +newText;
                 d3.select(this).text(newText);
