@@ -1,87 +1,314 @@
-/* CSS de base pour le corps de la page */
-html, body {
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    height: 100%;
-    font-family: Arial, sans-serif; /* Police pour l'ensemble de la page */
-    background-color: #f4f4f4; /* Couleur de fond */
+
+// script.js
+var svg = d3.select("svg");
+var circleData = [];
+var lineData = [];
+var selectedCircles = [];  // Stocker les cercles sélectionnés pour la liaison
+var selectedLine; // Ligne actuellement sélectionnée pour changer le style
+
+// Définir un marqueur pour les flèches
+svg.append("defs").append("marker")
+    .attr("id", "arrowhead")
+    .attr("viewBox", "-0 -5 10 10")
+    .attr("refX", 10) // Ajuster ici pour ancrer la flèche correctement
+    .attr("refY", 0)
+    .attr("orient", "auto")
+    .attr("markerWidth", 6)
+    .attr("markerHeight", 6)
+    .attr("xoverflow", "visible")
+    .append("svg:path")
+    .attr("d", "M 0,-5 L 10 ,0 L 0,5") // Forme de la flèche
+    .attr("fill", "#000")
+    .style("stroke", "none");
+
+// Fonction pour ajouter un nouveau cercle
+function addCircle() {
+    var number1 = prompt("Entrez temps au plus tot (en bas gauche) :", Math.floor(Math.random() * 10));
+    var number2 = prompt("Entrez temps au plus tard (en bas droit) :", Math.floor(Math.random() * 10));
+    var topNumber = prompt("Entrez le numero étape :", Math.floor(Math.random() * 10));
+
+    var newCircle = {
+        cx: Math.random() * 700 + 50, // Position aléatoire dans le SVG
+        cy: Math.random() * 500 + 50,
+        r: 30,
+        color: "blue",
+        id: circleData.length + 1,
+        number1: +number1,
+        number2: +number2,
+        topNumber: +topNumber
+    };
+    circleData.push(newCircle);
+    
+
+    // Mettre à jour l'affichage des cercles et lignes
+    updateDisplay();
 }
 
-/* Styles pour le conteneur SVG */
-svg {
-    display: block; /* Évite les marges par défaut */
-    background-color: #fff; /* Couleur de fond du SVG */
-    border: 1px solid #ccc; /* Bordure autour de la zone de dessin */
+// Fonction pour mettre à jour les cercles affichés
+function updateDisplay() {
+    var circles = svg.selectAll("g")
+        .data(circleData, function(d) { return d.id; });
+
+    // Entrée : ajouter des nouveaux cercles
+    var gEnter = circles.enter()
+        .append("g")
+        .attr("class", "circle")
+        .attr("transform", function(d) { return "translate(" + d.cx + "," + d.cy + ")"; })
+        .on("click", function(event, d) {
+            selectCircle(d);
+        })
+        .call(d3.drag()
+            .on("start", dragStarted)
+            .on("drag", dragged)
+            .on("end", dragEnded));
+
+    gEnter.append("circle")
+        .attr("r", function(d) { return d.r; })
+        .style("fill", function(d) { return d.color; })
+        .style("stroke", "black")
+        .style("stroke-width", 2);
+
+    // Ajouter le numéro d'étapes (rendre éditable)
+    gEnter.append("text")
+        .attr("y", -15)
+        .attr("text-anchor", "middle")
+        .attr("font-size", "12px")
+        .style("fill", "white")
+        .text(function(d) { return d.topNumber; })
+        .on("click", function(event, d) {
+            event.stopPropagation();
+            var newText = prompt("Modifier le numéro d'étapes :", d.topNumber);
+            if (newText !== null) {
+                d.topNumber = +newText;
+                d3.select(this).text(newText);
+            }
+        });
+
+    // Ajouter les nombres côte à côte dans la partie basse (rendre éditable)
+    gEnter.append("text")
+        .attr("x", -15)
+        .attr("y", 10)
+        .attr("text-anchor", "middle")
+        .attr("font-size", "12px")
+        .style("fill", "white")
+        .text(function(d) { return d.number1; })
+        .on("click", function(event, d) {
+            event.stopPropagation();
+            var newText = prompt("Modifier le temps au plus tôt :", d.number1);
+            if (newText !== null) {
+                d.number1 = +newText;
+                d3.select(this).text(newText);
+            }
+        });
+
+    gEnter.append("text")
+        .attr("x", 15)
+        .attr("y", 10)
+        .attr("text-anchor", "middle")
+        .attr("font-size", "12px")
+        .style("fill", "white")
+        .text(function(d) { return d.number2; })
+        .on("click", function(event, d) {
+            event.stopPropagation();
+            var newText = prompt("Modifier le temps au plus tard:", d.number2);
+            if (newText !== null) {
+                d.number2 = +newText;
+                d3.select(this).text(newText);
+            }
+        });
+
+    // Ajouter une icône de suppression
+    gEnter.append("circle")
+        .attr("class", "delete-icon")
+        .attr("r", 5)
+        .attr("cx", 20) // Position à droite du cercle
+        .attr("cy", 20) // Position en bas à droite
+        .on("click", function(event, d) {
+            event.stopPropagation(); // Éviter de sélectionner le cercle en même temps
+            deleteCircle(d.id); // Supprimer le cercle
+        });
+
+    circles.exit().remove();
+
+    updateLines();
 }
 
-/* Styles pour les cercles */
-.circle circle {
-    stroke: black; /* Couleur du contour des cercles */
-    stroke-width: 2; /* Épaisseur du contour */
+// Fonction pour supprimer un cercle et ses lignes associées
+function deleteCircle(circleId) {
+    circleData = circleData.filter(function(d) { return d.id !== circleId; });
+    lineData = lineData.filter(function(d) {
+        return d.circle1.id !== circleId && d.circle2.id !== circleId;
+    });
+    updateDisplay();
 }
 
-/* Styles pour les textes dans les cercles */
-.circle text {
-    font-size: 12px;
-    fill: white;
-    pointer-events: auto; /* Permet les événements de clic sur le texte */
+// Fonction pour mettre à jour les lignes entre les cercles
+function updateLines() {
+    var lines = svg.selectAll(".link")
+        .data(lineData);
+
+    var linesEnter = lines.enter()
+        .append("g")
+        .attr("class", "link")
+        .each(function(d) {
+            var line = d3.select(this)
+                .append("line")
+                .attr("stroke", d.color || "black")
+                .attr("stroke-width", 2)
+                .attr("marker-end", "url(#arrowhead)")
+                .on("click", function(event) {
+                    selectedLine = d; // Sauvegarder la ligne sélectionnée
+                    openStyleDialog(selectedLine); // Ouvrir le dialogue pour changer le style
+                });
+
+            // Ajouter du texte pour la  tâche et la durée de la liaison
+            d3.select(this)
+                .append("text")
+                .attr("x", (d.circle1.cx + d.circle2.cx) / 2) // Position au milieu
+                .attr("y", (d.circle1.cy + d.circle2.cy) / 2 - 5) // Légèrement au-dessus de la ligne
+                .attr("text-anchor", "middle")
+                .attr("font-size", "12px")
+                .style("fill", "black")
+                .text(d.text)
+                .on("click", function(event, d) {
+                    event.stopPropagation(); // Éviter de sélectionner la ligne en même temps
+                    var newText = prompt("Modifier la tâche et la durée :", d.text);
+                    if (newText !== null) {
+                        d.text = newText;
+                        d3.select(this).text(newText);
+                    }
+                });
+        });
+
+    lines.exit().remove();
+
+    lines.each(function(d) {
+        var edge = calculateEdge(d.circle1, d.circle2);
+        d3.select(this).select("line")
+            .attr("x1", edge.x1)
+            .attr("y1", edge.y1)
+            .attr("x2", edge.x2)
+            .attr("y2", edge.y2);
+
+        // Mettre à jour la position du texte
+        d3.select(this).select("text")
+            .attr("x", (edge.x1 + edge.x2) / 2)
+            .attr("y", (edge.y1 + edge.y2) / 2 - 5) // Ajuster la position verticalement
+            .text(d.text); // Mettre à jour le texte
+
+        // Mettre à jour le style de la ligne en fonction du style choisi
+        var lineElement = d3.select(this).select("line");
+        if (d.style === "normal") {
+            lineElement
+                .attr("stroke", "black")
+                .attr("stroke-width", 2)
+                .style("stroke-dasharray", "none");
+        } else if (d.style === "red") {
+            lineElement
+                .attr("stroke", "red")
+                .attr("stroke-width", 2)
+                .style("stroke-dasharray", "none");
+        } else if (d.style === "dashed") {
+            lineElement
+                .attr("stroke", "black")
+                .attr("stroke-width", 2)
+                .style("stroke-dasharray", "5, 5"); // Ligne pointillée
+        }
+    });
 }
 
-/* Style de la boîte de dialogue pour la sélection de style de ligne */
-#styleDialog {
-    display: none; /* Masqué par défaut */
-    position: fixed; /* Fixe la position de la boîte de dialogue */
-    top: 50%; /* Centrer verticalement */
-    left: 50%; /* Centrer horizontalement */
-    transform: translate(-50%, -50%); /* Ajustement pour centrer */
-    background-color: white; /* Couleur de fond */
-    border: 1px solid #ccc; /* Bordure */
-    padding: 20px; /* Espacement interne */
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Ombre */
-    z-index: 1000; /* Au-dessus des autres éléments */
+// Calculer les coordonnées des lignes entre les cercles
+function calculateEdge(circle1, circle2) {
+    const angle = Math.atan2(circle2.cy - circle1.cy, circle2.cx - circle1.cx);
+    const padding = 10; // Espacement entre la ligne et les cercles
+
+    return {
+        x1: circle1.cx + circle1.r * Math.cos(angle) + padding * Math.cos(angle),
+        y1: circle1.cy + circle1.r * Math.sin(angle) + padding * Math.sin(angle),
+        x2: circle2.cx - circle2.r * Math.cos(angle) - padding * Math.cos(angle),
+        y2: circle2.cy - circle2.r * Math.sin(angle) - padding * Math.sin(angle)
+    };
 }
 
-/* Styles pour les boutons de la boîte de dialogue */
-#styleDialog button {
-    margin-top: 10px; /* Espacement au-dessus des boutons */
-    padding: 5px 10px; /* Espacement interne des boutons */
-    background-color: #007bff; /* Couleur de fond */
-    color: white; /* Couleur du texte */
-    border: none; /* Pas de bordure */
-    border-radius: 4px; /* Coins arrondis */
-    cursor: pointer; /* Curseur de main au survol */
+// Fonction pour sélectionner les cercles
+function selectCircle(circle) {
+    if (selectedCircles.includes(circle)) {
+        selectedCircles = selectedCircles.filter(function(d) { return d !== circle; });
+    } else {
+        selectedCircles.push(circle);
+    }
+
+    if (selectedCircles.length == 2) {
+        createLink(selectedCircles[0], selectedCircles[1]);
+        selectedCircles = [];
+    }
 }
 
-#styleDialog button:hover {
-    background-color: #0056b3; /* Couleur au survol */
+// Fonction pour créer une liaison entre les cercles
+function createLink(circle1, circle2) {
+    var lineText = prompt("Entrez la  tâche et sa durée (ex:B4 :");
+
+    var newLine = { 
+        circle1: circle1, 
+        circle2: circle2, 
+        text: lineText, 
+        style: "normal", 
+        color: "black" // Par défaut
+    };
+
+    lineData.push(newLine);
+    updateLines();
 }
 
-/* Styles pour le texte de la flèche */
-.link text {
-    fill: black; /* Couleur du texte */
-    pointer-events: auto; /* Permet les événements de clic */
+// Fonction pour ouvrir la boîte de dialogue de sélection de style
+function openStyleDialog(line) {
+    selectedLine = line; // Sauvegarder la ligne sélectionnée
+    document.getElementById("styleDialog").style.display = "block"; // Afficher la boîte de dialogue
+    document.getElementById("lineStyle").value = selectedLine.style; // Sélectionner le style actuel
 }
 
-/* Styles pour les icônes de suppression */
-.delete-icon {
-    fill: red; /* Couleur rouge pour l'icône de suppression */
-    cursor: pointer; /* Curseur de main au survol */
+// Fonction pour appliquer le style sélectionné
+function applyLineStyle() {
+    const selectedStyle = document.getElementById("lineStyle").value;
+    if (selectedLine) {
+        selectedLine.style = selectedStyle; // Mettre à jour le style de la ligne
+        // Définir la couleur selon le style
+        if (selectedStyle === "normal") {
+            selectedLine.color = "black";
+        } else if (selectedStyle === "red") {
+            selectedLine.color = "red";
+        } else if (selectedStyle === "dashed") {
+            selectedLine.color = "black"; // Pour le style pointillé, couleur par défaut
+        }
+        updateLines(); // Mettre à jour les lignes graphiquement
+        closeStyleDialog(); // Fermer la boîte de dialogue
+    }
 }
 
-/* Styles pour les flèches */
-.link line {
-    stroke-width: 2; /* Épaisseur de la ligne */
+// Fonction pour fermer la boîte de dialogue
+function closeStyleDialog() {
+    document.getElementById("styleDialog").style.display = "none"; // Masquer la boîte de dialogue
 }
 
-.link.dashed line {
-    stroke-dasharray: 5, 5; /* Style de ligne pointillée */
+// Événements pour appliquer et annuler le style
+document.getElementById("applyStyle").addEventListener("click", applyLineStyle);
+document.getElementById("cancelStyle").addEventListener("click", closeStyleDialog);
+
+// Fonctions de Drag & Drop pour les cercles
+function dragStarted(event, d) {
+    d3.select(this).raise().classed("active", true);
 }
 
-.link.red line {
-    stroke: red; /* Couleur rouge pour la ligne */
+function dragged(event, d) {
+    d.cx = event.x;
+    d.cy = event.y;
+    d3.select(this).attr("transform", "translate(" + d.cx + "," + d.cy + ")");
+    updateLines();
 }
 
-.link.normal line {
-    stroke: black; /* Couleur noire pour la ligne normale */
+function dragEnded(event, d) {
+    d3.select(this).classed("active", false);
 }
+
+// Lancer l'ajout d'un cercle au clic sur le bouton
+document.getElementById("addCircle").addEventListener("click", addCircle);
