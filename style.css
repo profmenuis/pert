@@ -23,9 +23,9 @@ svg {
 
 /* Styles pour les textes dans les cercles */
 .circle text {
-    font-size: 12px; /* Taille du texte */
-    fill: white; /* Couleur du texte */
-    pointer-events: none; /* Empêche les événements de clic sur le texte */
+    font-size: 12px;
+    fill: white;
+    pointer-events: auto; /* Permet les événements de clic sur le texte */
 }
 
 /* Style de la boîte de dialogue pour la sélection de style de ligne */
