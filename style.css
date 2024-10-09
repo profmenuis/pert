@@ -5,13 +5,13 @@ html, body {
     width: 100%;
     height: 100%;
     font-family: Arial, sans-serif; /* Police pour l'ensemble de la page */
-    background-color: #f4f4f4; /* Couleur de fond */
+    background-color: #fff; /* Couleur de fond */
 }
 
 /* Styles pour le conteneur SVG */
 svg {
     display: block; /* Évite les marges par défaut */
-    background-color: ##79a885; /* Couleur de fond du SVG */
+    background-color: #fff; /* Couleur de fond du SVG */
     border: 2px solid #ccc; /* Bordure autour de la zone de dessin */
 }
 
