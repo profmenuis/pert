@@ -30,7 +30,7 @@ function addCircle() {
         cx: Math.random() * 700 + 50, // Position aléatoire dans le SVG
         cy: Math.random() * 500 + 50,
         r: 30,
-        color: "blue",
+        color: "pink",
         id: circleData.length + 1,
         number1: +number1,
         number2: +number2,
