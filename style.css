@@ -12,13 +12,13 @@ html, body {
 svg {
     display: block; /* Évite les marges par défaut */
     background-color: ##79a885; /* Couleur de fond du SVG */
-    border: 1px solid #ccc; /* Bordure autour de la zone de dessin */
+    border: 2px solid #ccc; /* Bordure autour de la zone de dessin */
 }
 
 /* Styles pour les cercles */
 .circle circle {
     stroke: black; /* Couleur du contour des cercles */
-    stroke-width: 2; /* Épaisseur du contour */
+    stroke-width: 3; /* Épaisseur du contour */
 }
 
 /* Styles pour les textes dans les cercles */
