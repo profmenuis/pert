@@ -245,7 +245,7 @@ function selectCircle(circle) {
 
 // Fonction pour créer une liaison entre les cercles
 function createLink(circle1, circle2) {
-    var lineText = prompt("Entrez la durée :");
+    var lineText = prompt("Entrez la  tâche et sa durée :");
 
     var newLine = { 
         circle1: circle1, 
